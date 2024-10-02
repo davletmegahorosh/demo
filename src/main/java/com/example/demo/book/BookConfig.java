@@ -14,7 +14,6 @@ public class BookConfig {
             BookRepository repository){
         return args -> {
             Book life_ex = new Book(
-                    1L,
                     "Жизненый опыт",
                     91,
                     400,
@@ -22,7 +21,6 @@ public class BookConfig {
             );
 
             Book gordosty = new Book(
-                    1L,
                     "Гордость и предубеждение",
                     382,
                     350,

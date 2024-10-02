@@ -1,11 +1,11 @@
 package com.example.demo.book;
 
-
 import jakarta.persistence.*;
 
 @Entity
 @Table
 public class Book {
+
     @Id
     @SequenceGenerator(
             name = "books",
@@ -16,25 +16,25 @@ public class Book {
             strategy = GenerationType.SEQUENCE,
             generator = "books"
     )
+
     private Long id;
     private String name;
     private int pages;
     private int price;
     private String author;
 
-    public Book() {
+    public Book(){
     }
 
-    public Book(String name, int pages, int price, String author) {
+    public Book(Long id, String name, int pages, int price, String author){
+        this.id = id;
         this.name = name;
         this.pages = pages;
         this.price = price;
         this.author = author;
     }
 
-
-    public Book(Long id, String name, int pages, int price, String author){
-        this.id = id;
+    public Book(String name, int pages, int price, String author){
         this.name = name;
         this.pages = pages;
         this.price = price;
