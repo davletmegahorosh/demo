@@ -22,6 +22,13 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public Book getBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Книга с id " + bookId + " не найдена"));
+    }
+
+
     public void addNewBook(Book book) {
         Optional<Book> bookByName = bookRepository
                 .findBookByName(book.getName());

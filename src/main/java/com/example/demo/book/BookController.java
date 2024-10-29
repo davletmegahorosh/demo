@@ -21,6 +21,12 @@ public class BookController {
         return bookService.bookList();
     }
 
+    @GetMapping(path = "{book_id}")
+    public Book getBookById(@PathVariable("book_id") Long bookId) {
+        return bookService.getBookById(bookId);
+    }
+
+
     @PostMapping
     public void addBook(@RequestBody Book book){
         bookService.addNewBook(book);
