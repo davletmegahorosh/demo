@@ -9,7 +9,6 @@ public class UserRegistrationRequest {
     @NotBlank
     private String password;
 
-    // Геттеры и сеттеры
     public String getUsername() {
         return username;
     }

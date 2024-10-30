@@ -44,7 +44,6 @@ public class CartService {
                 .orElseThrow(() -> new IllegalStateException("User not found"));
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 
-        // Здесь можно добавить логику имитации покупки, например, списание средств, создание заказа и т.д.
-        cartItemRepository.deleteAll(cartItems); // Очистка корзины после покупки
+        cartItemRepository.deleteAll(cartItems);
     }
 }

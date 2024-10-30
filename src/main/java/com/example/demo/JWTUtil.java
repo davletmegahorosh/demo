@@ -1,10 +1,9 @@
-package com.example.demo.security;
+package com.example.demo;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.function.Function;
 @Component
 public class JWTUtil {
 
-    private final String SECRET_KEY = "your_secret_key";
+    private String SECRET_KEY = "your_secret_key";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
