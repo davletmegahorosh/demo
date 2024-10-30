@@ -31,6 +31,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/cart/view").permitAll()
                         .requestMatchers(HttpMethod.POST, "/cart/purchase").permitAll()
 
+                        .requestMatchers(HttpMethod.GET,"/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable());
@@ -49,4 +51,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
