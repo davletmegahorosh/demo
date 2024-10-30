@@ -1,12 +1,20 @@
 package com.example.demo.user;
 
+import com.example.demo.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -22,15 +30,22 @@ public class UserService {
     public String registerUser(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
-            throw new IllegalStateException("Пользователь уже существует");
+            return "Пользователь уже существует"; // Возвращаем сообщение вместо исключения
         }
 
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
 
-        return jwtUtil.generateToken(username);
+        // Устанавливаем роль ADMIN, если это нужный пользователь
+        if (username.equals("admin")) {
+            user.setRoles(Set.of("ADMIN")); // Устанавливаем роль администратора
+        } else {
+            user.setRoles(Set.of("USER"));
+        }
+
+        userRepository.save(user);
+        return jwtUtil.generateToken(username); // Возвращаем токен
     }
 
     public String loginUser(String username, String password) {
@@ -42,5 +57,12 @@ public class UserService {
         } else {
             throw new IllegalStateException("Неверные данные для входа");
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 }
