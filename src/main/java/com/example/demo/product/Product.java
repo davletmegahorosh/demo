@@ -26,6 +26,10 @@ public class Product {
     private String name;
     private int price;
 
+    public User getAuthor() {
+        return author;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;

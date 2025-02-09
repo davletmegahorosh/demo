@@ -1,64 +1,79 @@
 package com.example.demo.product;
+import com.example.demo.category.Category;
+import com.example.demo.category.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
-    public List<Product> productsList() {
-        return productRepository.findAll();
+    // Получение списка продуктов с только названием и ценой
+    public List<ProductListResponse> productsList() {
+        return productRepository.findAll().stream()
+                .map(product -> new ProductListResponse(product.getName(), product.getPrice()))
+                .collect(Collectors.toList());
+    }
+
+    public ProductDetailsResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException("Продукт с таким ID не найден"));
+
+        // Формирование ответа с полной информацией
+        return new ProductDetailsResponse(
+                product.getName(),
+                product.getPrice(),
+                product.getCategory().getName(),  // assuming category has a `getName()` method
+                product.getAuthor().getFirstname() + " " + product.getAuthor().getLastname()  // assuming `User` has `getFirstname()` and `getLastname()`
+        );
     }
 
     public void addNewProduct(Product product) {
-        Optional<Product> productByName = productRepository
-                .findProductByName(product.getName());
+        Optional<Product> productByName = productRepository.findProductByName(product.getName());
         if (productByName.isPresent()) {
-            throw new IllegalStateException("Книга с таким названием уже существуется");
-
+            throw new IllegalStateException("Продукт с таким названием уже существует");
         }
+
         productRepository.save(product);
     }
 
-    public void deleteBook(Long book_id) {
+    public void updateProduct(Long productId, String name, Integer price, Long categoryId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException("Продукт не найден"));
+
+        if (name != null) {
+            product.setName(name);
+        }
+        if (price != null) {
+            product.setPrice(price);
+        }
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalStateException("Категория с таким ID не найдена"));
+            product.setCategory(category);
+        }
+
+        productRepository.save(product);
+    }
+
+    public void deleteProduct(Long book_id) {
         boolean exists = productRepository.existsById(book_id);
         if (!exists) {
             throw new IllegalStateException("product with id " + " doesnt'exists");
         }
         productRepository.deleteById(book_id);
-    }
-
-
-    @Transactional
-    public void updateProduct(Long product_id, String name, int price, int categoryId) {
-        Product product = productRepository.findById(product_id)
-                .orElseThrow(() -> new IllegalStateException(
-                        "product with id " + product_id + " doesn't exists"));
-
-        if (name != null && name.length() > 0 && !Objects.equals(product.getName(), name)) {
-            product.setName(name);
-        }
-
-        if (price > 0 && !Objects.equals(product.getPrice(), price)) {
-            product.setPrice(price);
-        }
-
-        if (categoryId > 0 && !Objects.equals(product.getCategory(), categoryId)) {
-            product.setPrice(price);
-        }
-
-
-        productRepository.save(product);
     }
 }

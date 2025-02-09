@@ -27,14 +27,20 @@ public class ProductController {
         this.categoryRepository = categoryRepository;
     }
 
+    // Получение списка всех продуктов с только названием и ценой
     @GetMapping
-    public List<Product> productList() {
+    public List<ProductListResponse> productList() {
         return productService.productsList();
+    }
+
+    // Получение продукта по ID
+    @GetMapping("{product_id}")
+    public ProductDetailsResponse getProductById(@PathVariable("product_id") Long productId) {
+        return productService.getProductById(productId);
     }
 
     @PostMapping
     public void addProduct(@RequestBody Product product, @RequestParam Long categoryId) {
-        // Получение текущего аутентифицированного пользователя
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
@@ -44,7 +50,6 @@ public class ProductController {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalStateException("Категория с таким ID не найдена"));
 
-        // Установка автора и категории продукта
         product.setAuthor(currentUser);
         product.setCategory(category);
 
@@ -53,7 +58,7 @@ public class ProductController {
 
     @DeleteMapping(path = "{product_id}")
     public void deleteProduct(@PathVariable("product_id") Long productId) {
-        productService.deleteBook(productId);
+        productService.deleteProduct(productId);
     }
 
     @PutMapping(path = "{product_id}")
@@ -61,7 +66,7 @@ public class ProductController {
             @PathVariable("product_id") Long productId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer price,
-            @RequestParam(required = false) Integer categoryId) {
+            @RequestParam(required = false) Long categoryId) {
         productService.updateProduct(productId, name, price, categoryId);
     }
 }
