@@ -1,5 +1,6 @@
 package com.example.demo.product;
 
+import com.example.demo.category.Category;
 import com.example.demo.user.User;
 import jakarta.persistence.*;
 
@@ -18,6 +19,9 @@ public class Product {
             generator = "products"
     )
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private String name;
     private int price;
@@ -26,20 +30,20 @@ public class Product {
     @JoinColumn(name = "user_id")
     private User author;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public int getPrice() {
@@ -50,9 +54,6 @@ public class Product {
         this.price = price;
     }
 
-    public User getAuthor() {
-        return author;
-    }
 
     public void setAuthor(User author) {
         this.author = author;

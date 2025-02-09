@@ -41,7 +41,7 @@ public class ProductService {
 
 
     @Transactional
-    public void updateProduct(Long product_id, String name, int price) {
+    public void updateProduct(Long product_id, String name, int price, int categoryId) {
         Product product = productRepository.findById(product_id)
                 .orElseThrow(() -> new IllegalStateException(
                         "product with id " + product_id + " doesn't exists"));
@@ -51,6 +51,10 @@ public class ProductService {
         }
 
         if (price > 0 && !Objects.equals(product.getPrice(), price)) {
+            product.setPrice(price);
+        }
+
+        if (categoryId > 0 && !Objects.equals(product.getCategory(), categoryId)) {
             product.setPrice(price);
         }
 
