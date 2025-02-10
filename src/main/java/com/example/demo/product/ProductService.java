@@ -1,11 +1,11 @@
 package com.example.demo.product;
+
 import com.example.demo.category.Category;
 import com.example.demo.category.CategoryRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,23 +21,21 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    // Получение списка продуктов с только названием и ценой
     public List<ProductListResponse> productsList() {
         return productRepository.findAll().stream()
-                .map(product -> new ProductListResponse(product.getName(), product.getPrice()))
+                .map(product -> new ProductListResponse(product.getName(), product.getPrice(), product.getImageBase64()))
                 .collect(Collectors.toList());
     }
 
     public ProductDetailsResponse getProductById(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalStateException("Продукт с таким ID не найден"));
-
-        // Формирование ответа с полной информацией
+        Product product = getProductOrThrow(productId);
         return new ProductDetailsResponse(
                 product.getName(),
                 product.getPrice(),
-                product.getCategory().getName(),  // assuming category has a `getName()` method
-                product.getAuthor().getFirstname() + " " + product.getAuthor().getLastname()  // assuming `User` has `getFirstname()` and `getLastname()`
+                product.getCategory().getName(),
+                product.getAuthor().getFirstname() + " " + product.getAuthor().getLastname(),
+                product.getDescription(),
+                product.getImageBase64()
         );
     }
 
@@ -46,19 +44,23 @@ public class ProductService {
         if (productByName.isPresent()) {
             throw new IllegalStateException("Продукт с таким названием уже существует");
         }
-
         productRepository.save(product);
     }
 
-    public void updateProduct(Long productId, String name, Integer price, Long categoryId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalStateException("Продукт не найден"));
+    public void updateProduct(Long productId, String name, Integer price, Long categoryId, String description, String imageBase64) {
+        Product product = getProductOrThrow(productId);
 
         if (name != null) {
             product.setName(name);
         }
         if (price != null) {
             product.setPrice(price);
+        }
+        if (description != null) {
+            product.setDescription(description);
+        }
+        if (imageBase64 != null) {
+            product.setImageBase64(imageBase64);
         }
         if (categoryId != null) {
             Category category = categoryRepository.findById(categoryId)
@@ -69,11 +71,15 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public void deleteProduct(Long book_id) {
-        boolean exists = productRepository.existsById(book_id);
-        if (!exists) {
-            throw new IllegalStateException("product with id " + " doesnt'exists");
+    public void deleteProduct(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalStateException("Продукт с таким ID не существует");
         }
-        productRepository.deleteById(book_id);
+        productRepository.deleteById(productId);
+    }
+
+    public Product getProductOrThrow(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException("Продукт не найден"));
     }
 }

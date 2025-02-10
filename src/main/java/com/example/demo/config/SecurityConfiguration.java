@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,13 +21,15 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())  // Отключение CSRF
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("categories/add/").hasRole("ADMIN")
+                                .requestMatchers("categories/edit/**").hasRole("ADMIN")
+                                .requestMatchers("categories/delete/**").hasRole("ADMIN")
 
-//                        .requestMatchers("/api/user/**").authenticated()
-
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers("product/add/").authenticated()
+                                .requestMatchers("product/edit/**").authenticated()
+                                .requestMatchers("product/delete/**").authenticated()
 
                         .anyRequest().permitAll()
                 )

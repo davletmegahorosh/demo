@@ -1,19 +1,19 @@
 package com.example.demo.product;
+
 import com.example.demo.category.Category;
 import com.example.demo.category.CategoryRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import com.example.demo.product.Product;
-import com.example.demo.product.ProductService;
 import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("house_list/")
+@RequestMapping("product/")
 public class ProductController {
 
     private final ProductService productService;
@@ -27,20 +27,22 @@ public class ProductController {
         this.categoryRepository = categoryRepository;
     }
 
-    // Получение списка всех продуктов с только названием и ценой
     @GetMapping
     public List<ProductListResponse> productList() {
         return productService.productsList();
     }
 
-    // Получение продукта по ID
     @GetMapping("{product_id}")
     public ProductDetailsResponse getProductById(@PathVariable("product_id") Long productId) {
         return productService.getProductById(productId);
     }
 
-    @PostMapping
-    public void addProduct(@RequestBody Product product, @RequestParam Long categoryId) {
+    @PostMapping(path = "add/")
+    public void addProduct(@RequestBody Map<String, Object> requestBody) {
+        String productName = (String) requestBody.get("name");
+        Integer productPrice = (Integer) requestBody.get("price");
+        Long categoryId = Long.valueOf((Integer) requestBody.get("categoryId"));
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
@@ -50,23 +52,38 @@ public class ProductController {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalStateException("Категория с таким ID не найдена"));
 
+        Product product = new Product(productName, productPrice);
         product.setAuthor(currentUser);
         product.setCategory(category);
 
         productService.addNewProduct(product);
     }
 
-    @DeleteMapping(path = "{product_id}")
+    @DeleteMapping(path = "delete/{product_id}")
     public void deleteProduct(@PathVariable("product_id") Long productId) {
+        Product product = productService.getProductOrThrow(productId);
+        checkUserAuthorization(product);
         productService.deleteProduct(productId);
     }
 
-    @PutMapping(path = "{product_id}")
+    @PutMapping(path = "edit/{product_id}")
     public void updateProduct(
             @PathVariable("product_id") Long productId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer price,
-            @RequestParam(required = false) Long categoryId) {
-        productService.updateProduct(productId, name, price, categoryId);
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String imageBase64) {
+
+        Product product = productService.getProductOrThrow(productId);
+        checkUserAuthorization(product);
+        productService.updateProduct(productId, name, price, categoryId, description, imageBase64);
+    }
+
+    private void checkUserAuthorization(Product product) {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!product.getAuthor().getEmail().equals(currentUserEmail)) {
+            throw new SecurityException("У вас нет прав на редактирование или удаление этого продукта");
+        }
     }
 }

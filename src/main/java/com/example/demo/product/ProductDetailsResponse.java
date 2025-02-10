@@ -5,16 +5,19 @@ public class ProductDetailsResponse {
     private int price;
     private String category;
     private String author;
+    private String description;
+    private String imageBase64;
 
-    // Конструктор
-    public ProductDetailsResponse(String name, int price, String category, String author) {
+    public ProductDetailsResponse(String name, int price, String category, String author, String description, String imageBase64) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.author = author;
+        this.description = description;
+        this.imageBase64 = imageBase64;
+
     }
 
-    // Геттеры и сеттеры
     public String getName() {
         return name;
     }

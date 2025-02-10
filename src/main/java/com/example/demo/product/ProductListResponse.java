@@ -3,14 +3,15 @@ package com.example.demo.product;
 public class ProductListResponse {
     private String name;
     private int price;
+    private String imageBase64;
 
-    // Конструктор
-    public ProductListResponse(String name, int price) {
+
+    public ProductListResponse(String name, int price, String imageBase64) {
         this.name = name;
         this.price = price;
+        this.imageBase64 = imageBase64;
     }
 
-    // Геттеры и сеттеры
     public String getName() {
         return name;
     }

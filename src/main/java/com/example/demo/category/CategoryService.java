@@ -60,7 +60,7 @@ public class CategoryService {
 
         List<ProductListResponse> productsInCategory = productRepository.findByCategory(category)
                 .stream()
-                .map(product -> new ProductListResponse(product.getName(), product.getPrice()))
+                .map(product -> new ProductListResponse(product.getName(), product.getPrice(), product.getImageBase64()))
                 .collect(Collectors.toList());
 
         return new CategoryDetailsResponse(category.getName(), productsInCategory);

@@ -26,9 +26,8 @@ public class Product {
     private String name;
     private int price;
 
-    public User getAuthor() {
-        return author;
-    }
+    private String description;
+    private String imageBase64;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -58,10 +57,33 @@ public class Product {
         this.price = price;
     }
 
+    public User getAuthor() {
+        return author;
+    }
 
     public void setAuthor(User author) {
         this.author = author;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+
     public Product() {}
+    public Product(String name, Integer price) {
+        this.name = name;
+        this.price = price;
+    }
 }
