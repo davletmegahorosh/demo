@@ -27,6 +27,7 @@ public class Category {
     private List<Product> products = new ArrayList<>();
 
     public Category() {}
+    public Category(String name) {this.name = name;}
 
     public String getName() {
         return name;

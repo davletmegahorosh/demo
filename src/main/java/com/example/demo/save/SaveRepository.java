@@ -1,8 +1,8 @@
 package com.example.demo.save;
-import com.example.demo.category.Category;
+
 import com.example.demo.product.Product;
+import com.example.demo.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,10 +11,7 @@ import java.util.Optional;
 @Repository
 public interface SaveRepository extends JpaRepository<Save, Long> {
 
-//    @Query("SELECT b FROM Save b WHERE b.name = ?1")
-//    Optional<Product> findProductByName(String name);
+    Optional<Save> findByProductAndAuthor(Product product, User author);
 
-//    @Query("SELECT b FROM Save b WHERE b.price > ?1 and b.price < ?2")
-//    Optional<Product> findProductByPrice(float min, float max);
-
+    List<Save> findByAuthor(User author);
 }
