@@ -1,6 +1,10 @@
 package com.example.demo.category;
 
+import com.example.demo.product.Product;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -19,6 +23,8 @@ public class Category {
     private Long id;
 
     private String name;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
 
     public Category() {}
 

@@ -20,7 +20,7 @@ public class Product {
     )
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     private String name;
@@ -30,7 +30,7 @@ public class Product {
     private String imageBase64;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     public String getName() {
