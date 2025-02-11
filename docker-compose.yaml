@@ -23,3 +23,5 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
+
+#I created both docker and docker compose to connect with db and launch project
