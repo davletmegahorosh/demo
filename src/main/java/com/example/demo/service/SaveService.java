@@ -1,15 +1,17 @@
-package com.example.demo.save;
+package com.example.demo.service;
 
-import com.example.demo.product.Product;
-import com.example.demo.product.ProductRepository;
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
+import com.example.demo.model.Product;
+import com.example.demo.model.Save;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.model.User;
+import com.example.demo.repository.SaveRepository;
+import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

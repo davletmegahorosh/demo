@@ -1,5 +1,5 @@
-package com.example.demo.user;
-import com.example.demo.product.Product;
+package com.example.demo.model;
+import com.example.demo.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

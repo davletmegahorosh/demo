@@ -1,6 +1,5 @@
-package com.example.demo.category;
+package com.example.demo.model;
 
-import com.example.demo.product.Product;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

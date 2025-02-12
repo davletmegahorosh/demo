@@ -1,9 +1,13 @@
-package com.example.demo.product;
+package com.example.demo.controller;
 
-import com.example.demo.category.Category;
-import com.example.demo.category.CategoryRepository;
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
+import com.example.demo.model.Category;
+import com.example.demo.repository.CategoryRepository;
+import com.example.demo.model.Product;
+import com.example.demo.dto.ProductDetailsResponse;
+import com.example.demo.dto.ProductListResponse;
+import com.example.demo.service.ProductService;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

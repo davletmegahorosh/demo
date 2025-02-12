@@ -1,6 +1,4 @@
-package com.example.demo.category;
-
-import com.example.demo.product.ProductListResponse;
+package com.example.demo.dto;
 
 import java.util.List;
 

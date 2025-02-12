@@ -1,7 +1,5 @@
-package com.example.demo.product;
+package com.example.demo.model;
 
-import com.example.demo.category.Category;
-import com.example.demo.user.User;
 import jakarta.persistence.*;
 
 @Entity

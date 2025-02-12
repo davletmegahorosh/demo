@@ -1,5 +1,8 @@
-package com.example.demo.category;
+package com.example.demo.controller;
 
+import com.example.demo.model.Category;
+import com.example.demo.dto.CategoryDetailsResponse;
+import com.example.demo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

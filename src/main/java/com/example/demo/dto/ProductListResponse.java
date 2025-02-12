@@ -1,4 +1,4 @@
-package com.example.demo.product;
+package com.example.demo.dto;
 
 public class ProductListResponse {
     private String name;
