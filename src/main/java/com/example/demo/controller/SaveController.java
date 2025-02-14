@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/saves")
+@RequestMapping("/saves")
 public class SaveController {
 
     private final SaveService saveService;

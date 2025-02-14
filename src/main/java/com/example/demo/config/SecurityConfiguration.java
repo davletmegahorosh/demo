@@ -25,6 +25,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("categories/edit/**").hasRole("ADMIN")
                                 .requestMatchers("categories/delete/**").hasRole("ADMIN")
 
+                                .requestMatchers("saves/**").authenticated()
+
                                 .requestMatchers("product/add/").authenticated()
                                 .requestMatchers("product/edit/**").authenticated()
                                 .requestMatchers("product/delete/**").authenticated()
